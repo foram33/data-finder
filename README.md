@@ -1,1 +1,1 @@
-# data-finder
+Introducing a data filtering app - search and filter persons based on personal details. Users can easily search individuals by name, email, or company name using the search bar. Simplify your data search experience!
