@@ -4,14 +4,15 @@ import "./data-display.css";
 
 const DataDisplay = () => {
 
-    const [peopleData, setpeopleData] = useState([]);
+    const [peopleData, setPeopleData] = useState([]);
     const [searchQuery, setSearchedItem] = useState('');
+    const [selectedRadio, setSelectedRadio] = useState('name');
 
     useEffect(() => {
         axios.get('https://jsonplaceholder.typicode.com/users')
         .then(response => {
-            setpeopleData(response.data);
-    })
+            setPeopleData(response.data);
+        })
         .catch(error => {
             console.error(error);
         });
@@ -21,21 +22,28 @@ const DataDisplay = () => {
         setSearchedItem(event.target.value);
     }
 
-    const filteredData = peopleData.filter((item) =>
-         item.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredData = peopleData.filter((item) => {
+        if(selectedRadio === 'name') {
+            return item.name.toLowerCase().includes(searchQuery.toLowerCase()) 
+        } else if(selectedRadio === 'email') {
+            return item.email.toLowerCase().includes(searchQuery.toLowerCase())
+        } else if(selectedRadio === 'companyname') {
+            return item.company.name.toLowerCase().includes(searchQuery.toLowerCase())
+        }
+        return false;
+    });
 
     return(
         <>
         <div className="search-area">
             <label>
-                <input name="name" type="radio" />Name
+                <input name="name" type="radio" checked={selectedRadio === 'name'} onChange={() => setSelectedRadio('name')} />Name
             </label>
             <label>
-                <input name="email" type="radio" />Email
+                <input name="email" type="radio" checked={selectedRadio === 'email'} onChange={() => setSelectedRadio('email')} />Email
             </label>
             <label>
-                <input name="company-name" type="radio" />Company Name
+                <input name="companyname" type="radio" checked={selectedRadio === 'companyname'} onChange={() => setSelectedRadio('companyname')} />Company Name
             </label>
         </div>
         <input type="search" placeholder="Search here.." value={searchQuery} onChange={handleSearch} />
